@@ -1,0 +1,26 @@
+{
+  "name": "com.gsr.homo_textmeshpro",
+  "displayName": "HomoTextMeshPro",
+  "version": "0.0.1",
+  "unity": "2020.1",
+  "unityRelease": "0a10",
+  "description": "The TMP that fixed GC-Problem. Based on version 3.0.6.",
+  "keywords": [
+    "GSR",
+    "Homo",
+    "TextMeshPro",
+    "TextMesh Pro",
+    "TMP",
+    "Text",
+    "SDF"
+  ],
+  "category": "Text Rendering",
+  "dependencies": {
+    "com.unity.ugui": "1.0.0"
+  },
+  "repository": {
+    "url": "https://github.cds.internal.unity3d.com/unity/com.gsr.homo_textmeshpro.git",
+    "type": "git",
+    "revision": "01e57e3b7de18af9dfe9baaa0a0ff5cc4765c899"
+  }
+}
