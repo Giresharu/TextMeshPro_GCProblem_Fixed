@@ -39,11 +39,11 @@ namespace TMPro
         // Default Constructor
         public TMP_TextInfo()
         {
-            characterInfo = new TMP_CharacterInfo[8];
+            // characterInfo = new TMP_CharacterInfo[8];
             wordInfo = new TMP_WordInfo[16];
             linkInfo = new TMP_LinkInfo[0];
             lineInfo = new TMP_LineInfo[2];
-            pageInfo = new TMP_PageInfo[4];
+            // pageInfo = new TMP_PageInfo[4];
 
             meshInfo = new TMP_MeshInfo[1];
         }
@@ -54,7 +54,7 @@ namespace TMPro
             wordInfo = new TMP_WordInfo[16];
             linkInfo = new TMP_LinkInfo[0];
             lineInfo = new TMP_LineInfo[2];
-            pageInfo = new TMP_PageInfo[4];
+            // pageInfo = new TMP_PageInfo[4];
 
             meshInfo = new TMP_MeshInfo[1];
         }
@@ -63,13 +63,13 @@ namespace TMPro
         {
             this.textComponent = textComponent;
             
-            characterInfo = new TMP_CharacterInfo[8];
+            // characterInfo = new TMP_CharacterInfo[8];
 
             wordInfo = new TMP_WordInfo[4];
             linkInfo = new TMP_LinkInfo[0];
 
             lineInfo = new TMP_LineInfo[2];
-            pageInfo = new TMP_PageInfo[4];
+            // pageInfo = new TMP_PageInfo[4];
 
             meshInfo = new TMP_MeshInfo[1];
             meshInfo[0].mesh = textComponent.mesh;
@@ -201,7 +201,7 @@ namespace TMPro
         internal void ClearPageInfo()
         {
             if (this.pageInfo == null)
-                this.pageInfo = new TMP_PageInfo[2];
+                return;
 
             int length = this.pageInfo.Length;
 

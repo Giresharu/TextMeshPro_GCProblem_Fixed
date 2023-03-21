@@ -37,7 +37,6 @@ namespace TMPro {
                         AssetDatabase.importPackageCompleted += ImportCallback;
 
                         string packageFullPath = GetPackageFullPath();
-                        Debug.Log(packageFullPath);
                         AssetDatabase.ImportPackage(packageFullPath + "/Package Resources/TMP Essential Resources.unitypackage", false);
                     }
                     GUILayout.Space(5f);
