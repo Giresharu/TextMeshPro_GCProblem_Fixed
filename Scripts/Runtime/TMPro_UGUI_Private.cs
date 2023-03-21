@@ -958,6 +958,8 @@ namespace TMPro {
             MaterialReference.AddMaterialReference(m_currentMaterial, m_currentFontAsset, ref m_materialReferences, m_materialReferenceIndexLookup);
 
             // Set allocations for the text object's TextInfo
+            //TODO Add characterInfo
+            //character的数量通常会频繁变化，所以给它一个Next256，以让它不那么容易被Resize
             if (m_textInfo == null)
                 m_textInfo = new TMP_TextInfo(TMP_TextUtilities.Next256(m_InternalTextProcessingArraySize));
             else if (m_textInfo.characterInfo == null)
@@ -1682,12 +1684,12 @@ namespace TMPro {
 
             m_pageNumber = 0;
 
-            //TODO
+            //TODO Delete
             /*if (m_textInfo.pageInfo == null) {
                 m_textInfo.pageInfo = new TMP_PageInfo[1];
             }*/
-            /*int _pageToDisplay = m_pageToDisplay - 1 /*Mathf.Clamp(m_pageToDisplay - 1, 0, m_textInfo.pageInfo.Length - 1)#1#;
-            m_textInfo.ClearPageInfo();*/
+            /*int _pageToDisplay = m_pageToDisplay - 1 /*Mathf.Clamp(m_pageToDisplay - 1, 0, m_textInfo.pageInfo.Length - 1)#1#;*/
+            m_textInfo.ClearPageInfo();
 
             Vector4 margins = m_margin;
             float marginWidth = m_marginWidth > 0 ? m_marginWidth : 0;
@@ -3141,12 +3143,13 @@ namespace TMPro {
                 if (m_overflowMode == TextOverflowModes.Page && charCode != 10 && charCode != 11 && charCode != 13 && charCode != 0x2028 && charCode != 0x2029) // && m_pageNumber < 16)
                 {
                     // Check if we need to increase allocations for the pageInfo array.
-                    //TODO 
+                    //TODO Add PageInfo
+                    // page的数量一般很少，且不易变更，通常在1~5之间，没必要用2次幂表示。
                     if (m_textInfo.pageInfo == null) {
                         m_textInfo.pageInfo = new TMP_PageInfo[m_pageNumber + 1];
                     }
                     if (m_pageNumber + 1 > m_textInfo.pageInfo.Length)
-                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo, m_pageNumber + 1, true);
+                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo, m_pageNumber + 1, false);
 
                     m_textInfo.pageInfo[m_pageNumber].ascender = m_PageAscender;
                     m_textInfo.pageInfo[m_pageNumber].descender = m_ElementDescender < m_textInfo.pageInfo[m_pageNumber].descender
@@ -3290,7 +3293,7 @@ namespace TMPro {
             int _pageToDisplay = 0;
             if (overflowMode == TextOverflowModes.Page) {
                 _pageToDisplay = Mathf.Clamp(m_pageToDisplay - 1, 0, m_textInfo.pageInfo.Length - 1);
-                m_textInfo.ClearPageInfo();
+                // m_textInfo.ClearPageInfo();
             }
 
             // Handle Vertical Text Alignment
