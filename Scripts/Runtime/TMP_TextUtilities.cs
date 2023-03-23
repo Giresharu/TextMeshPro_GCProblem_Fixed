@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 namespace TMPro {
@@ -544,11 +546,13 @@ namespace TMPro {
         /// <param name="camera">The scene camera which may be assigned to a Canvas using ScreenSpace Camera or WorldSpace render mode. Set to null is using ScreenSpace Overlay.</param>
         /// <returns></returns>
         public static int FindIntersectingWord(TMP_Text text, Vector3 position, Camera camera) {
+            if (text.textInfo.characterInfo == null || text.textInfo.wordInfo == null) return 0;
+            if (text.textInfo.characterInfo.Length == 0 || text.textInfo.wordInfo.Length == 0) return 0;
+
             RectTransform rectTransform = text.rectTransform;
 
             // Convert position into Worldspace coordinates
             ScreenPointToWorldPointInRectangle(rectTransform, position, camera, out position);
-
             for (int i = 0; i < text.textInfo.wordCount; i++) {
                 TMP_WordInfo wInfo = text.textInfo.wordInfo[i];
 
@@ -653,6 +657,24 @@ namespace TMPro {
             return -1;
         }
 
+        public static void ListToArray<T>(List<T> list, ref T[] array, bool canBeEmpty = true) {
+            if (array == null) {
+                if (list.Count == 0 && !canBeEmpty) {
+                    array = new T[1];
+                    return;
+                }
+                array = list.ToArray();
+                return;
+            }
+            if (array.Length < list.Count) {
+                Array.Resize(ref array, list.Count);
+            }
+
+            for (var i = 0; i < list.Count; i++) {
+                array[i] = list[i];
+            }
+
+        }
 
         /// <summary>
         /// Function returning the index of the word at the given position (if any).

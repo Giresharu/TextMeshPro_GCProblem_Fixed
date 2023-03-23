@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.TextCore;
@@ -960,6 +961,7 @@ namespace TMPro {
             // Set allocations for the text object's TextInfo
             //TODO Add characterInfo
             //character的数量通常会频繁变化，所以给它一个Next256，以让它不那么容易被Resize
+
             if (m_textInfo == null)
                 m_textInfo = new TMP_TextInfo(TMP_TextUtilities.Next256(m_InternalTextProcessingArraySize));
             else if (m_textInfo.characterInfo == null)
@@ -1724,6 +1726,14 @@ namespace TMPro {
 
             CharacterSubstitution characterToSubstitute = new CharacterSubstitution(-1, 0);
             bool isSoftHyphenIgnored = false;
+
+            // TODO List
+            List<TMP_WordInfo> m_wordInfos = TMP_ListPool<TMP_WordInfo>.Get();
+            List<TMP_PageInfo> m_pageInfos = TMP_ListPool<TMP_PageInfo>.Get();
+
+            m_linkInfos = TMP_ListPool<TMP_LinkInfo>.Get();
+            m_lineInfos = TMP_ListPool<TMP_LineInfo>.Get();
+            m_lineInfos.Add(new TMP_LineInfo());
 
             // Save character and line state before we begin layout.
             SaveWordWrappingState(ref m_SavedWordWrapState, -1, -1);
@@ -2844,7 +2854,12 @@ namespace TMPro {
                     if (charCode == 9) {
                         m_textInfo.characterInfo[m_characterCount].isVisible = false;
                         m_lastVisibleCharacterOfLine = m_characterCount;
-                        m_textInfo.lineInfo[m_lineNumber].spaceCount += 1;
+                        //TODO Line
+
+                        TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
+                        temp_lineInfo.spaceCount += 1;
+                        m_lineInfos[m_lineNumber] = temp_lineInfo;
+
                         m_textInfo.spaceCount += 1;
                     } else if (charCode == 0xAD) {
                         m_textInfo.characterInfo[m_characterCount].isVisible = false;
@@ -2872,8 +2887,15 @@ namespace TMPro {
 
                         m_lineVisibleCharacterCount += 1;
                         m_lastVisibleCharacterOfLine = m_characterCount;
-                        m_textInfo.lineInfo[m_lineNumber].marginLeft = marginLeft;
-                        m_textInfo.lineInfo[m_lineNumber].marginRight = marginRight;
+                        //TODO Line
+
+                        TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
+                        temp_lineInfo.marginLeft = marginLeft;
+                        temp_lineInfo.marginRight = marginRight;
+                        m_lineInfos[m_lineNumber] = temp_lineInfo;
+
+                        /*m_textInfo.lineInfo[m_lineNumber].marginLeft = marginLeft;
+                        m_textInfo.lineInfo[m_lineNumber].marginRight = marginRight;*/
                     }
 
                     k_HandleVisibleCharacterMarker.End();
@@ -2914,12 +2936,20 @@ namespace TMPro {
 
                     // Track # of spaces per line which is used for line justification.
                     if ((charCode == 10 || charCode == 11 || charCode == 0xA0 || charCode == 0x2007 || charCode == 0x2028 || charCode == 0x2029 || char.IsSeparator((char)charCode)) && charCode != 0xAD && charCode != 0x200B && charCode != 0x2060) {
-                        m_textInfo.lineInfo[m_lineNumber].spaceCount += 1;
+                        //TODO Line
+                        TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
+                        temp_lineInfo.spaceCount += 1;
+                        m_lineInfos[m_lineNumber] = temp_lineInfo;
                         m_textInfo.spaceCount += 1;
                     }
 
-                    if (charCode == 0xA0)
-                        m_textInfo.lineInfo[m_lineNumber].controlCharacterCount += 1;
+                    if (charCode == 0xA0) {
+                        //TODO Line
+                        TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
+                        temp_lineInfo.controlCharacterCount += 1;
+                        m_lineInfos[m_lineNumber] = temp_lineInfo;
+                        /*list_lineInfos[m_lineNumber].controlCharacterCount += 1;*/
+                    }
 
                     k_HandleWhiteSpacesMarker.End();
                 }
@@ -2959,8 +2989,15 @@ namespace TMPro {
                 m_textInfo.characterInfo[m_characterCount].lineNumber = m_lineNumber;
                 m_textInfo.characterInfo[m_characterCount].pageNumber = m_pageNumber;
 
-                if (charCode != 10 && charCode != 11 && charCode != 13 && isInjectingCharacter == false /* && charCode != 8230 */ || m_textInfo.lineInfo[m_lineNumber].characterCount == 1)
-                    m_textInfo.lineInfo[m_lineNumber].alignment = m_lineJustification;
+                //TODO Line
+                if (charCode != 10 && charCode != 11 && charCode != 13 && isInjectingCharacter == false /* && charCode != 8230 */ || m_lineInfos[m_lineNumber].characterCount == 1) {
+
+                    TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
+                    temp_lineInfo.alignment = m_lineJustification;
+                    m_lineInfos[m_lineNumber] = temp_lineInfo;
+
+                    // m_textInfo.lineInfo[m_lineNumber].alignment = m_lineJustification;
+                }
                 #endregion Store Character Data
 
 
@@ -3043,7 +3080,37 @@ namespace TMPro {
                         isMaxVisibleDescenderSet = true;
 
                     // Save Line Information
-                    m_textInfo.lineInfo[m_lineNumber].firstCharacterIndex = m_firstCharacterOfLine;
+                    //TODO Line
+
+                    TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
+                    temp_lineInfo.firstCharacterIndex = m_firstCharacterOfLine;
+                    temp_lineInfo.firstVisibleCharacterIndex = m_firstVisibleCharacterOfLine = m_firstCharacterOfLine > m_firstVisibleCharacterOfLine ? m_firstCharacterOfLine : m_firstVisibleCharacterOfLine;
+                    temp_lineInfo.lastCharacterIndex = m_lastCharacterOfLine = m_characterCount;
+                    temp_lineInfo.lastVisibleCharacterIndex = m_lastVisibleCharacterOfLine = m_lastVisibleCharacterOfLine < m_firstVisibleCharacterOfLine ? m_firstVisibleCharacterOfLine : m_lastVisibleCharacterOfLine;
+
+                    temp_lineInfo.characterCount = temp_lineInfo.lastCharacterIndex - temp_lineInfo.firstCharacterIndex + 1;
+                    temp_lineInfo.visibleCharacterCount = m_lineVisibleCharacterCount;
+                    temp_lineInfo.lineExtents.min = new Vector2(m_textInfo.characterInfo[m_firstVisibleCharacterOfLine].bottomLeft.x, lineDescender);
+                    temp_lineInfo.lineExtents.max = new Vector2(m_textInfo.characterInfo[m_lastVisibleCharacterOfLine].topRight.x, lineAscender);
+                    temp_lineInfo.length = temp_lineInfo.lineExtents.max.x - (padding * currentElementScale);
+                    temp_lineInfo.width = widthOfTextArea;
+
+                    if (temp_lineInfo.characterCount == 1)
+                        temp_lineInfo.alignment = m_lineJustification;
+
+                    float maxAdvanceOffset = ((m_currentFontAsset.normalSpacingOffset + characterSpacingAdjustment + boldSpacingAdjustment) * currentEmScale - m_cSpacing) * (1 - m_charWidthAdjDelta);
+                    if (m_textInfo.characterInfo[m_lastVisibleCharacterOfLine].isVisible)
+                        temp_lineInfo.maxAdvance = m_textInfo.characterInfo[m_lastVisibleCharacterOfLine].xAdvance + (m_isRightToLeft ? maxAdvanceOffset : -maxAdvanceOffset);
+                    else
+                        temp_lineInfo.maxAdvance = m_textInfo.characterInfo[m_lastCharacterOfLine].xAdvance + (m_isRightToLeft ? maxAdvanceOffset : -maxAdvanceOffset);
+
+                    temp_lineInfo.baseline = 0 - m_lineOffset;
+                    temp_lineInfo.ascender = lineAscender;
+                    temp_lineInfo.descender = lineDescender;
+                    temp_lineInfo.lineHeight = lineAscender - lineDescender + lineGap * baseScale;
+                    m_lineInfos[m_lineNumber] = temp_lineInfo;
+
+                    /*m_textInfo.lineInfo[m_lineNumber].firstCharacterIndex = m_firstCharacterOfLine;
                     m_textInfo.lineInfo[m_lineNumber].firstVisibleCharacterIndex = m_firstVisibleCharacterOfLine = m_firstCharacterOfLine > m_firstVisibleCharacterOfLine ? m_firstCharacterOfLine : m_firstVisibleCharacterOfLine;
                     m_textInfo.lineInfo[m_lineNumber].lastCharacterIndex = m_lastCharacterOfLine = m_characterCount;
                     m_textInfo.lineInfo[m_lineNumber].lastVisibleCharacterIndex = m_lastVisibleCharacterOfLine = m_lastVisibleCharacterOfLine < m_firstVisibleCharacterOfLine ? m_firstVisibleCharacterOfLine : m_lastVisibleCharacterOfLine;
@@ -3067,7 +3134,7 @@ namespace TMPro {
                     m_textInfo.lineInfo[m_lineNumber].baseline = 0 - m_lineOffset;
                     m_textInfo.lineInfo[m_lineNumber].ascender = lineAscender;
                     m_textInfo.lineInfo[m_lineNumber].descender = lineDescender;
-                    m_textInfo.lineInfo[m_lineNumber].lineHeight = lineAscender - lineDescender + lineGap * baseScale;
+                    m_textInfo.lineInfo[m_lineNumber].lineHeight = lineAscender - lineDescender + lineGap * baseScale;*/
 
                     // Add new line if not last line or character.
                     if (charCode == 10 || charCode == 11 || charCode == 0x2D || charCode == 0x2028 || charCode == 0x2029) {
@@ -3081,10 +3148,22 @@ namespace TMPro {
 
                         m_firstCharacterOfLine = m_characterCount + 1;
                         m_lineVisibleCharacterCount = 0;
+// TODO LINE
+
+                        temp_lineInfo = new TMP_LineInfo();
+
+                        temp_lineInfo.lineExtents.min = k_LargePositiveVector2;
+                        temp_lineInfo.lineExtents.max = k_LargeNegativeVector2;
+
+                        temp_lineInfo.ascender = k_LargeNegativeFloat;
+                        temp_lineInfo.descender = k_LargePositiveFloat;
+
+                        m_lineInfos.Add(temp_lineInfo);
+
 
                         // Check to make sure Array is large enough to hold a new line.
-                        if (m_lineNumber >= m_textInfo.lineInfo.Length)
-                            ResizeLineExtents(m_lineNumber);
+                        /*if (m_lineNumber >= m_textInfo.lineInfo.Length)
+                            ResizeLineExtents(m_lineNumber);*/
 
                         float lastVisibleAscender = m_textInfo.characterInfo[m_characterCount].adjustedAscender;
 
@@ -3145,13 +3224,29 @@ namespace TMPro {
                     // Check if we need to increase allocations for the pageInfo array.
                     //TODO Add PageInfo
                     // page的数量一般很少，且不易变更，通常在1~5之间，没必要用2次幂表示。
-                    if (m_textInfo.pageInfo == null) {
+                    /*if (m_textInfo.pageInfo == null) {
                         m_textInfo.pageInfo = new TMP_PageInfo[m_pageNumber + 1];
                     }
                     if (m_pageNumber + 1 > m_textInfo.pageInfo.Length)
-                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo, m_pageNumber + 1, false);
+                        TMP_TextInfo.Resize(ref m_textInfo.pageInfo, m_pageNumber + 1, false);*/
 
-                    m_textInfo.pageInfo[m_pageNumber].ascender = m_PageAscender;
+                    TMP_PageInfo temp_pageInfo = new TMP_PageInfo();
+                    temp_pageInfo.ascender = m_PageAscender;
+                    temp_pageInfo.descender = m_ElementAscender < temp_pageInfo.descender ? m_ElementAscender : temp_pageInfo.descender;
+
+                    if (m_pageNumber == 0 && m_characterCount == 0)
+                        temp_pageInfo.firstCharacterIndex = m_characterCount;
+                    else if (m_characterCount > 0 && m_pageNumber != m_textInfo.characterInfo[m_characterCount - 1].pageNumber) {
+                        TMP_PageInfo last_pageInfo = m_pageInfos[^1];
+                        last_pageInfo.lastCharacterIndex = m_characterCount - 1;
+                        temp_pageInfo.firstCharacterIndex = m_characterCount;
+                        m_pageInfos[^1] = last_pageInfo;
+                    } else if (m_characterCount == totalCharacterCount - 1)
+                        temp_pageInfo.lastCharacterIndex = m_characterCount;
+
+                    m_pageInfos.Add(temp_pageInfo);
+
+                    /*m_textInfo.pageInfo[m_pageNumber].ascender = m_PageAscender;
                     m_textInfo.pageInfo[m_pageNumber].descender = m_ElementDescender < m_textInfo.pageInfo[m_pageNumber].descender
                         ? m_ElementDescender
                         : m_textInfo.pageInfo[m_pageNumber].descender;
@@ -3162,7 +3257,7 @@ namespace TMPro {
                         m_textInfo.pageInfo[m_pageNumber - 1].lastCharacterIndex = m_characterCount - 1;
                         m_textInfo.pageInfo[m_pageNumber].firstCharacterIndex = m_characterCount;
                     } else if (m_characterCount == totalCharacterCount - 1)
-                        m_textInfo.pageInfo[m_pageNumber].lastCharacterIndex = m_characterCount;
+                        m_textInfo.pageInfo[m_pageNumber].lastCharacterIndex = m_characterCount;*/
                 }
                 k_SavePageInfoMarker.End();
                 #endregion Saving CharacterInfo
@@ -3237,6 +3332,22 @@ namespace TMPro {
 
                 m_characterCount += 1;
             }
+// TODO Release List
+
+            TMP_TextUtilities.ListToArray(m_pageInfos, ref m_textInfo.pageInfo);
+            TMP_TextUtilities.ListToArray(m_lineInfos, ref m_textInfo.lineInfo);
+            TMP_TextUtilities.ListToArray(m_linkInfos, ref m_textInfo.linkInfo);
+
+            // m_textInfo.wordInfo = list_wordInfos.ToArray();
+            // m_textInfo.pageInfo = list_pageInfos.ToArray();
+            // m_textInfo.lineInfo = m_lineInfos.ToArray();
+            // m_textInfo.linkInfo = m_linkInfos.ToArray();
+            TMP_ListPool<TMP_PageInfo>.Release(m_pageInfos);
+            TMP_ListPool<TMP_LineInfo>.Release(m_lineInfos);
+            TMP_ListPool<TMP_LinkInfo>.Release(m_linkInfos);
+
+            m_linkInfos = null;
+            m_lineInfos = null;
 
             // Check Auto Sizing and increase font size to fill text container.
             #region Check Auto-Sizing (Upper Font Size Bounds)
@@ -3741,18 +3852,33 @@ namespace TMPro {
 
                     // If last character is a word
                     if (isStartOfWord && i == m_characterCount - 1) {
+
+                        // TODO WordInfo
+                        /*if (m_textInfo.wordInfo==null) {
+                            m_textInfo.wordInfo = new TMP_WordInfo[TMP_TextUtilities.Next256(m_textInfo.wordCount + 1)];
+                        }
+                        
                         int size = m_textInfo.wordInfo.Length;
                         int index = m_textInfo.wordCount;
 
                         if (m_textInfo.wordCount + 1 > size)
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
+                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1,true);*/
 
                         wordLastChar = i;
 
-                        m_textInfo.wordInfo[index].firstCharacterIndex = wordFirstChar;
+                        /*m_textInfo.wordInfo[index].firstCharacterIndex = wordFirstChar;
                         m_textInfo.wordInfo[index].lastCharacterIndex = wordLastChar;
                         m_textInfo.wordInfo[index].characterCount = wordLastChar - wordFirstChar + 1;
-                        m_textInfo.wordInfo[index].textComponent = this;
+                        m_textInfo.wordInfo[index].textComponent = this;*/
+
+                        TMP_WordInfo temp_info = new TMP_WordInfo() {
+                            characterCount = wordLastChar - wordFirstChar + 1,
+                            firstCharacterIndex = wordFirstChar,
+                            lastCharacterIndex = wordLastChar,
+                            textComponent = this
+                        };
+
+                        m_wordInfos.Add(temp_info);
 
                         wordCount += 1;
                         m_textInfo.wordCount += 1;
@@ -3765,16 +3891,32 @@ namespace TMPro {
                         wordLastChar = i == m_characterCount - 1 && char.IsLetterOrDigit(unicode) ? i : i - 1;
                         isStartOfWord = false;
 
+                        // TODO WordInfo
+                        /*if (m_textInfo.wordInfo==null) {
+                            m_textInfo.wordInfo = new TMP_WordInfo[TMP_TextUtilities.Next256(m_textInfo.wordCount + 1)];
+                            // Debug.Log(m_textInfo.wordInfo + " new " +TMP_TextUtilities.Next256(m_textInfo.wordCount + 1));
+                        }
+                        
                         int size = m_textInfo.wordInfo.Length;
                         int index = m_textInfo.wordCount;
 
                         if (m_textInfo.wordCount + 1 > size)
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
+                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1,true);
 
                         m_textInfo.wordInfo[index].firstCharacterIndex = wordFirstChar;
                         m_textInfo.wordInfo[index].lastCharacterIndex = wordLastChar;
                         m_textInfo.wordInfo[index].characterCount = wordLastChar - wordFirstChar + 1;
-                        m_textInfo.wordInfo[index].textComponent = this;
+                        m_textInfo.wordInfo[index].textComponent = this;*/
+
+                        // 改用List来承担resize的过程
+                        TMP_WordInfo temp_info = new TMP_WordInfo() {
+                            characterCount = wordLastChar - wordFirstChar + 1,
+                            firstCharacterIndex = wordFirstChar,
+                            lastCharacterIndex = wordLastChar,
+                            textComponent = this
+                        };
+
+                        m_wordInfos.Add(temp_info);
 
                         wordCount += 1;
                         m_textInfo.wordCount += 1;
@@ -3782,7 +3924,6 @@ namespace TMPro {
                     }
                 }
                 #endregion
-
 
                 // Setup & Handle Underline
                 #region Underline
@@ -4038,6 +4179,10 @@ namespace TMPro {
             }
             #endregion
 
+            //TODO Release WordInfo
+            TMP_TextUtilities.ListToArray(m_wordInfos, ref m_textInfo.wordInfo,false);
+            TMP_ListPool<TMP_WordInfo>.Release(m_wordInfos);
+            
             // Set vertex count for Underline geometry
             //m_textInfo.meshInfo[m_Underline.materialIndex].vertexCount = last_vert_index;
 

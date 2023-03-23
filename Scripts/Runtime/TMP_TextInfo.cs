@@ -4,14 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-namespace TMPro
-{
+namespace TMPro {
     /// <summary>
     /// Class which contains information about every element contained within the text object.
     /// </summary>
     [Serializable]
-    public class TMP_TextInfo
-    {
+    public class TMP_TextInfo {
         internal static Vector2 k_InfinityVectorPositive = new Vector2(32767, 32767);
         internal static Vector2 k_InfinityVectorNegative = new Vector2(-32767, -32767);
 
@@ -37,38 +35,35 @@ namespace TMPro
         private TMP_MeshInfo[] m_CachedMeshInfo;
 
         // Default Constructor
-        public TMP_TextInfo()
-        {
+        public TMP_TextInfo() {
             // characterInfo = new TMP_CharacterInfo[8];
-            wordInfo = new TMP_WordInfo[16];
-            linkInfo = new TMP_LinkInfo[0];
-            lineInfo = new TMP_LineInfo[2];
+            // wordInfo = new TMP_WordInfo[16];
+            // linkInfo = new TMP_LinkInfo[0];
+            // lineInfo = new TMP_LineInfo[1];
             // pageInfo = new TMP_PageInfo[4];
 
             meshInfo = new TMP_MeshInfo[1];
         }
 
-        internal TMP_TextInfo(int characterCount)
-        {
+        internal TMP_TextInfo(int characterCount) {
             characterInfo = new TMP_CharacterInfo[characterCount];
-            wordInfo = new TMP_WordInfo[16];
-            linkInfo = new TMP_LinkInfo[0];
-            lineInfo = new TMP_LineInfo[2];
+            // wordInfo = new TMP_WordInfo[16];
+            // linkInfo = new TMP_LinkInfo[0];
+            // lineInfo = new TMP_LineInfo[1];
             // pageInfo = new TMP_PageInfo[4];
 
             meshInfo = new TMP_MeshInfo[1];
         }
 
-        public TMP_TextInfo(TMP_Text textComponent)
-        {
+        public TMP_TextInfo(TMP_Text textComponent) {
             this.textComponent = textComponent;
-            
+
             // characterInfo = new TMP_CharacterInfo[8];
 
-            wordInfo = new TMP_WordInfo[4];
-            linkInfo = new TMP_LinkInfo[0];
+            // wordInfo = new TMP_WordInfo[4];
+            // linkInfo = new TMP_LinkInfo[0];
 
-            lineInfo = new TMP_LineInfo[2];
+            // lineInfo = new TMP_LineInfo[1];
             // pageInfo = new TMP_PageInfo[4];
 
             meshInfo = new TMP_MeshInfo[1];
@@ -80,8 +75,7 @@ namespace TMPro
         /// <summary>
         /// Function to clear the counters of the text object.
         /// </summary>
-        public void Clear()
-        {
+        public void Clear() {
             characterCount = 0;
             spaceCount = 0;
             wordCount = 0;
@@ -90,8 +84,7 @@ namespace TMPro
             pageCount = 0;
             spriteCount = 0;
 
-            for (int i = 0; i < this.meshInfo.Length; i++)
-            {
+            for (int i = 0; i < this.meshInfo.Length; i++) {
                 this.meshInfo[i].vertexCount = 0;
             }
         }
@@ -100,8 +93,7 @@ namespace TMPro
         /// <summary>
         ///
         /// </summary>
-        internal void ClearAllData()
-        {
+        internal void ClearAllData() {
             characterCount = 0;
             spaceCount = 0;
             wordCount = 0;
@@ -110,11 +102,11 @@ namespace TMPro
             pageCount = 0;
             spriteCount = 0;
 
-            this.characterInfo = new TMP_CharacterInfo[4];
-            this.wordInfo = new TMP_WordInfo[1];
-            this.lineInfo = new TMP_LineInfo[1];
-            this.pageInfo = new TMP_PageInfo[1];
-            this.linkInfo = new TMP_LinkInfo[0];
+            this.characterInfo = null;
+            this.wordInfo = null;
+            this.lineInfo = null;
+            this.pageInfo = null;
+            this.linkInfo = null;
 
             materialCount = 0;
 
@@ -125,8 +117,7 @@ namespace TMPro
         /// <summary>
         /// Function to clear the content of the MeshInfo array while preserving the Triangles, Normals and Tangents.
         /// </summary>
-        public void ClearMeshInfo(bool updateMesh)
-        {
+        public void ClearMeshInfo(bool updateMesh) {
             for (int i = 0; i < this.meshInfo.Length; i++)
                 this.meshInfo[i].Clear(updateMesh);
         }
@@ -135,8 +126,7 @@ namespace TMPro
         /// <summary>
         /// Function to clear the content of all the MeshInfo arrays while preserving their Triangles, Normals and Tangents.
         /// </summary>
-        public void ClearAllMeshInfo()
-        {
+        public void ClearAllMeshInfo() {
             for (int i = 0; i < this.meshInfo.Length; i++)
                 this.meshInfo[i].Clear(true);
         }
@@ -145,8 +135,7 @@ namespace TMPro
         /// <summary>
         ///
         /// </summary>
-        public void ResetVertexLayout(bool isVolumetric)
-        {
+        public void ResetVertexLayout(bool isVolumetric) {
             for (int i = 0; i < this.meshInfo.Length; i++)
                 this.meshInfo[i].ResizeMeshInfo(0, isVolumetric);
         }
@@ -156,10 +145,8 @@ namespace TMPro
         /// Function used to mark unused vertices as degenerate.
         /// </summary>
         /// <param name="materials"></param>
-        public void ClearUnusedVertices(MaterialReference[] materials)
-        {
-            for (int i = 0; i < meshInfo.Length; i++)
-            {
+        public void ClearUnusedVertices(MaterialReference[] materials) {
+            for (int i = 0; i < meshInfo.Length; i++) {
                 int start = 0; // materials[i].referenceCount * 4;
                 meshInfo[i].ClearUnusedVertices(start);
             }
@@ -169,15 +156,14 @@ namespace TMPro
         /// <summary>
         /// Function to clear and initialize the lineInfo array.
         /// </summary>
-        public void ClearLineInfo()
-        {
+        public void ClearLineInfo() {
             if (this.lineInfo == null)
-                this.lineInfo = new TMP_LineInfo[2];
+                return;
+            // this.lineInfo = new TMP_LineInfo[2];
 
             int length = this.lineInfo.Length;
 
-            for (int i = 0; i < length; i++)
-            {
+            for (int i = 0; i < length; i++) {
                 this.lineInfo[i].characterCount = 0;
                 this.lineInfo[i].spaceCount = 0;
                 this.lineInfo[i].wordCount = 0;
@@ -198,15 +184,13 @@ namespace TMPro
             }
         }
 
-        internal void ClearPageInfo()
-        {
+        internal void ClearPageInfo() {
             if (this.pageInfo == null)
                 return;
 
             int length = this.pageInfo.Length;
 
-            for (int i = 0; i < length; i++)
-            {
+            for (int i = 0; i < length; i++) {
                 this.pageInfo[i].firstCharacterIndex = 0;
                 this.pageInfo[i].lastCharacterIndex = 0;
                 this.pageInfo[i].ascender = -32767;
@@ -220,15 +204,12 @@ namespace TMPro
         /// Function to copy the MeshInfo Arrays and their primary vertex data content.
         /// </summary>
         /// <returns>A copy of the MeshInfo[]</returns>
-        public TMP_MeshInfo[] CopyMeshInfoVertexData()
-        {
-            if (m_CachedMeshInfo == null || m_CachedMeshInfo.Length != meshInfo.Length)
-            {
+        public TMP_MeshInfo[] CopyMeshInfoVertexData() {
+            if (m_CachedMeshInfo == null || m_CachedMeshInfo.Length != meshInfo.Length) {
                 m_CachedMeshInfo = new TMP_MeshInfo[meshInfo.Length];
 
                 // Initialize all the vertex data arrays
-                for (int i = 0; i < m_CachedMeshInfo.Length; i++)
-                {
+                for (int i = 0; i < m_CachedMeshInfo.Length; i++) {
                     int length = meshInfo[i].vertices.Length;
 
                     m_CachedMeshInfo[i].vertices = new Vector3[length];
@@ -242,12 +223,10 @@ namespace TMPro
                 }
             }
 
-            for (int i = 0; i < m_CachedMeshInfo.Length; i++)
-            {
+            for (int i = 0; i < m_CachedMeshInfo.Length; i++) {
                 int length = meshInfo[i].vertices.Length;
 
-                if (m_CachedMeshInfo[i].vertices.Length != length)
-                {
+                if (m_CachedMeshInfo[i].vertices.Length != length) {
                     m_CachedMeshInfo[i].vertices = new Vector3[length];
                     m_CachedMeshInfo[i].uvs0 = new Vector2[length];
                     m_CachedMeshInfo[i].uvs2 = new Vector2[length];
@@ -281,8 +260,7 @@ namespace TMPro
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
         /// <param name="size"></param>
-        public static void Resize<T> (ref T[] array, int size)
-        {
+        public static void Resize<T>(ref T[] array, int size) {
             // Allocated to the next power of two
             int newSize = size > 1024 ? size + 256 : Mathf.NextPowerOfTwo(size);
 
@@ -297,14 +275,13 @@ namespace TMPro
         /// <param name="array"></param>
         /// <param name="size"></param>
         /// <param name="isFixedSize"></param>
-        public static void Resize<T>(ref T[] array, int size, bool isBlockAllocated)
-        {
+        public static void Resize<T>(ref T[] array, int size, bool isBlockAllocated) {
             if (isBlockAllocated) size = size > 1024 ? size + 256 : Mathf.NextPowerOfTwo(size);
 
             if (size == array.Length) return;
 
             //Debug.Log("Resizing TextInfo from [" + array.Length + "] to [" + size + "]");
-
+            
             Array.Resize(ref array, size);
         }
 

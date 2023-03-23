@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace TMPro
@@ -11,11 +12,17 @@ namespace TMPro
         public static List<T> Get()
         {
             return s_ListPool.Get();
+
         }
 
         public static void Release(List<T> toRelease)
         {
             s_ListPool.Release(toRelease);
         }
+
+        public static void Clear() {
+            s_ListPool.Clear();
+        }
+        
     }
 }

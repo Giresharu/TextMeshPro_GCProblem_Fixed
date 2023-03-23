@@ -3920,7 +3920,7 @@ namespace TMPro
                         int index = m_textInfo.wordCount;
 
                         if (m_textInfo.wordCount + 1 > size)
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
+                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1,true);
 
                         wordLastChar = i;
 
@@ -3949,7 +3949,7 @@ namespace TMPro
                         int index = m_textInfo.wordCount;
 
                         if (m_textInfo.wordCount + 1 > size)
-                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1);
+                            TMP_TextInfo.Resize(ref m_textInfo.wordInfo, size + 1,true);
 
                         m_textInfo.wordInfo[index].firstCharacterIndex = wordFirstChar;
                         m_textInfo.wordInfo[index].lastCharacterIndex = wordLastChar;
