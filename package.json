@@ -17,8 +17,7 @@
     "com.unity.ugui": "1.0.0"
   },
   "repository": {
-    "url": "https://github.cds.internal.unity3d.com/unity/com.unity.textmeshpro.git",
+    "url": "https://github.com/Giresharu/TextMeshPro_GCProblem_Fixed",
     "type": "git",
-    "revision": "01e57e3b7de18af9dfe9baaa0a0ff5cc4765c899"
   }
 }
