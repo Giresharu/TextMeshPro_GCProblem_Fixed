@@ -3400,7 +3400,8 @@ namespace TMPro {
             #region Text Vertical Alignment
             Vector3 anchorOffset = Vector3.zero;
             Vector3[] corners = m_RectTransformCorners; // GetTextContainerLocalCorners();
-
+            
+            //TODO 迁移_pageToDisplay到这里
             int _pageToDisplay = 0;
             if (overflowMode == TextOverflowModes.Page) {
                 _pageToDisplay = Mathf.Clamp(m_pageToDisplay - 1, 0, m_textInfo.pageInfo.Length - 1);

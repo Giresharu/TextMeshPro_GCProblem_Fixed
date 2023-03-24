@@ -19,10 +19,7 @@ namespace TMPro
         {
             s_ListPool.Release(toRelease);
         }
-
-        public static void Clear() {
-            s_ListPool.Clear();
-        }
+        
         
     }
 }
