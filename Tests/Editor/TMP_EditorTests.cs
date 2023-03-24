@@ -60,7 +60,7 @@ namespace TMPro
         [OneTimeSetUp]
         public void Setup()
         {
-            if (Directory.Exists(Path.GetFullPath("Assets/TextMesh Pro")) || Directory.Exists(Path.GetFullPath("Packages/com.gsr.homo_textmeshpro.tests/TextMesh Pro")))
+            if (Directory.Exists(Path.GetFullPath("Assets/TextMesh Pro")) || Directory.Exists(Path.GetFullPath("Packages/com.unity.textmeshprofixed.tests/TextMesh Pro")))
             {
                 GameObject textObject = new GameObject("Text Object");
                 m_TextComponent = textObject.AddComponent<TextMeshPro>();

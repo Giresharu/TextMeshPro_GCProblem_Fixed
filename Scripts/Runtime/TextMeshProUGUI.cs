@@ -14,7 +14,7 @@ namespace TMPro
     [RequireComponent(typeof(CanvasRenderer))]
     [AddComponentMenu("UI/TextMeshPro - Text (UI)", 11)]
     [ExecuteAlways]
-    [HelpURL("https://docs.unity3d.com/Packages/com.gsr.homo_textmeshpro@3.0")]
+    [HelpURL("https://docs.unity3d.com/Packages/com.unity.textmeshprofixed@3.0")]
     public partial class TextMeshProUGUI : TMP_Text, ILayoutElement
     {
         /// <summary>

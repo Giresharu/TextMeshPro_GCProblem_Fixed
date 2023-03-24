@@ -160,19 +160,19 @@ namespace TMPro.EditorUtilities
         private static string GetPackageRelativePath()
         {
             // Check for potential UPM package
-            string packagePath = Path.GetFullPath("Packages/com.gsr.homo_textmeshpro");
+            string packagePath = Path.GetFullPath("Packages/com.unity.textmeshprofixed");
             if (Directory.Exists(packagePath))
             {
-                return "Packages/com.gsr.homo_textmeshpro";
+                return "Packages/com.unity.textmeshprofixed";
             }
 
             packagePath = Path.GetFullPath("Assets/..");
             if (Directory.Exists(packagePath))
             {
                 // Search default location for development package
-                if (Directory.Exists(packagePath + "/Assets/Packages/com.gsr.homo_textmeshpro/Editor Resources"))
+                if (Directory.Exists(packagePath + "/Assets/Packages/com.unity.textmeshprofixed/Editor Resources"))
                 {
-                    return "Assets/Packages/com.gsr.homo_textmeshpro";
+                    return "Assets/Packages/com.unity.textmeshprofixed";
                 }
 
                 // Search for default location of normal TextMesh Pro AssetStore package
@@ -193,7 +193,7 @@ namespace TMPro.EditorUtilities
         private static string GetPackageFullPath()
         {
             // Check for potential UPM package
-            string packagePath = Path.GetFullPath("Packages/com.gsr.homo_textmeshpro");
+            string packagePath = Path.GetFullPath("Packages/com.unity.textmeshprofixed");
             if (Directory.Exists(packagePath))
             {
                 return packagePath;
@@ -203,9 +203,9 @@ namespace TMPro.EditorUtilities
             if (Directory.Exists(packagePath))
             {
                 // Search default location for development package
-                if (Directory.Exists(packagePath + "/Assets/Packages/com.gsr.homo_textmeshpro/Editor Resources"))
+                if (Directory.Exists(packagePath + "/Assets/Packages/com.unity.textmeshprofixed/Editor Resources"))
                 {
-                    return packagePath + "/Assets/Packages/com.gsr.homo_textmeshpro";
+                    return packagePath + "/Assets/Packages/com.unity.textmeshprofixed";
                 }
 
                 // Search for default location of normal TextMesh Pro AssetStore package

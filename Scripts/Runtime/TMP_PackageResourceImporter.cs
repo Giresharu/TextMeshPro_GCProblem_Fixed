@@ -100,7 +100,7 @@ namespace TMPro {
 
         static string GetPackageFullPath() {
             // Check for potential UPM package
-            string packagePath = Path.GetFullPath("Packages/com.gsr.homo_textmeshpro");
+            string packagePath = Path.GetFullPath("Packages/com.unity.textmeshprofixed");
             if (Directory.Exists(packagePath)) {
                 return packagePath;
             }
@@ -108,8 +108,8 @@ namespace TMPro {
             packagePath = Path.GetFullPath("Assets/..");
             if (Directory.Exists(packagePath)) {
                 // Search default location for development package
-                if (Directory.Exists(packagePath + "/Assets/Packages/com.gsr.homo_textmeshpro/Editor Resources")) {
-                    return packagePath + "/Assets/Packages/com.gsr.homo_textmeshpro";
+                if (Directory.Exists(packagePath + "/Assets/Packages/com.unity.textmeshprofixed/Editor Resources")) {
+                    return packagePath + "/Assets/Packages/com.unity.textmeshprofixed";
                 }
 
                 // Search for default location of normal TextMesh Pro AssetStore package
