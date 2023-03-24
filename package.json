@@ -15,9 +15,5 @@
   "category": "Text Rendering",
   "dependencies": {
     "com.unity.ugui": "1.0.0"
-  },
-  "repository": {
-    "url": "https://github.com/Giresharu/TextMeshPro_GCProblem_Fixed.git",
-    "type": "git",
   }
 }
