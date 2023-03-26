@@ -2150,8 +2150,13 @@ namespace TMPro {
 
                     // Injected characters do not override margins
                     if (isInjectingCharacter) {
-                        marginLeft = m_textInfo.lineInfo[m_lineNumber].marginLeft;
-                        marginRight = m_textInfo.lineInfo[m_lineNumber].marginRight;
+                        //TODO Line
+                        marginLeft = m_lineInfos[m_lineNumber].marginLeft;
+                        marginRight = m_lineInfos[m_lineNumber].marginRight;
+
+
+                        // marginLeft = m_textInfo.lineInfo[m_lineNumber].marginLeft;
+                        // marginRight = m_textInfo.lineInfo[m_lineNumber].marginRight;
                     }
 
                     widthOfTextArea = m_width != -1 ? Mathf.Min(marginWidth + 0.0001f - marginLeft - marginRight, m_width) : marginWidth + 0.0001f - marginLeft - marginRight;
@@ -2859,8 +2864,15 @@ namespace TMPro {
                     if (charCode == 0x0A && m_characterCount != m_firstCharacterOfLine) {
                         fontScale = m_textInfo.characterInfo[m_characterCount - 1].pointSize / m_Ellipsis.fontAsset.m_FaceInfo.pointSize * m_Ellipsis.fontAsset.m_FaceInfo.scale * (m_isOrthographic ? 1 : 0.1f);
                         scale = fontScale * m_fontScaleMultiplier * m_Ellipsis.character.m_Scale * m_Ellipsis.character.m_Glyph.scale;
+
+                        //TODO Line
+                        marginLeft = m_lineInfos[m_lineNumber].marginLeft;
+                        marginRight = m_lineInfos[m_lineNumber].marginRight;
+
+                        /*
                         marginLeft = m_textInfo.lineInfo[m_lineNumber].marginLeft;
                         marginRight = m_textInfo.lineInfo[m_lineNumber].marginRight;
+                    */
                     }
 
                     float textHeight = m_maxTextAscender - (m_maxLineDescender - m_lineOffset) + (m_lineOffset > 0 && m_IsDrivenLineSpacing == false ? m_maxLineAscender - m_startOfLineAscender : 0);
@@ -3219,7 +3231,7 @@ namespace TMPro {
 
                 m_characterCount += 1;
             }
-            
+
             // TODO Release List
 
             TMP_TextUtilities.ListToArray(m_pageInfos, ref m_textInfo.pageInfo);
@@ -3235,7 +3247,7 @@ namespace TMPro {
             TMP_ListPool<TMP_LinkInfo>.Release(m_linkInfos);
 
             m_linkInfos = null;
-            m_lineInfos = null;           
+            m_lineInfos = null;
 
             // Check Auto Sizing and increase font size to fill text container.
             #region Check Auto-Sizing (Upper Font Size Bounds)
@@ -3723,7 +3735,7 @@ namespace TMPro {
 
                     // If last character is a word
                     if (isStartOfWord && i == m_characterCount - 1) {
-                        
+
                         // TODO WordInfo
                         /*int size = m_textInfo.wordInfo.Length;
                         int index = m_textInfo.wordCount;
@@ -3737,14 +3749,14 @@ namespace TMPro {
                         m_textInfo.wordInfo[index].lastCharacterIndex = wordLastChar;
                         m_textInfo.wordInfo[index].characterCount = wordLastChar - wordFirstChar + 1;
                         m_textInfo.wordInfo[index].textComponent = this;*/
-                        
+
                         TMP_WordInfo temp_info = new TMP_WordInfo() {
                             characterCount = wordLastChar - wordFirstChar + 1,
                             firstCharacterIndex = wordFirstChar,
                             lastCharacterIndex = wordLastChar,
                             textComponent = this
                         };
-                        
+
                         wordCount += 1;
                         m_textInfo.wordCount += 1;
                         m_textInfo.lineInfo[currentLine].wordCount += 1;
@@ -4044,9 +4056,9 @@ namespace TMPro {
                 lastLine = currentLine;
             }
             #endregion
-            
+
             //TODO Release WordInfo
-            TMP_TextUtilities.ListToArray(m_wordInfos, ref m_textInfo.wordInfo,false);
+            TMP_TextUtilities.ListToArray(m_wordInfos, ref m_textInfo.wordInfo, false);
             TMP_ListPool<TMP_WordInfo>.Release(m_wordInfos);
 
             // Set vertex count for Underline geometry

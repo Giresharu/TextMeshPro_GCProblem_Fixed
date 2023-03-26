@@ -2258,8 +2258,14 @@ namespace TMPro {
 
                     // Injected characters do not override margins
                     if (isInjectingCharacter) {
-                        marginLeft = m_textInfo.lineInfo[m_lineNumber].marginLeft;
-                        marginRight = m_textInfo.lineInfo[m_lineNumber].marginRight;
+                        
+                        //TODO Line
+                        marginLeft = m_lineInfos[m_lineNumber].marginLeft;
+                        marginRight = m_lineInfos[m_lineNumber].marginRight;
+
+                        
+                        // marginLeft = m_textInfo.lineInfo[m_lineNumber].marginLeft;
+                        // marginRight = m_textInfo.lineInfo[m_lineNumber].marginRight;
                     }
 
                     widthOfTextArea = m_width != -1 ? Mathf.Min(marginWidth + 0.0001f - marginLeft - marginRight, m_width) : marginWidth + 0.0001f - marginLeft - marginRight;
@@ -2968,8 +2974,15 @@ namespace TMPro {
                     if (charCode == 0x0A && m_characterCount != m_firstCharacterOfLine) {
                         fontScale = m_textInfo.characterInfo[m_characterCount - 1].pointSize / m_Ellipsis.fontAsset.m_FaceInfo.pointSize * m_Ellipsis.fontAsset.m_FaceInfo.scale * (m_isOrthographic ? 1 : 0.1f);
                         scale = fontScale * m_fontScaleMultiplier * m_Ellipsis.character.m_Scale * m_Ellipsis.character.m_Glyph.scale;
+                        
+                        //TODO Line
+                        marginLeft = m_lineInfos[m_lineNumber].marginLeft;
+                        marginRight = m_lineInfos[m_lineNumber].marginRight;
+
+                        /*
                         marginLeft = m_textInfo.lineInfo[m_lineNumber].marginLeft;
                         marginRight = m_textInfo.lineInfo[m_lineNumber].marginRight;
+                    */
                     }
 
                     float textHeight = m_maxTextAscender - (m_maxLineDescender - m_lineOffset) + (m_lineOffset > 0 && m_IsDrivenLineSpacing == false ? m_maxLineAscender - m_startOfLineAscender : 0);

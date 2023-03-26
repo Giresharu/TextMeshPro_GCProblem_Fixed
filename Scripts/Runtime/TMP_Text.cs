@@ -5229,8 +5229,10 @@ namespace TMPro {
 
             state.spriteAnimationID = m_spriteAnimationID;
 //TODO Line
-            if (m_lineNumber < m_lineInfos.Count)
+            if (m_lineInfos != null && m_lineNumber < m_lineInfos.Count)
                 state.lineInfo = m_lineInfos[m_lineNumber];
+            else if (m_textInfo.lineInfo != null && m_lineNumber < m_textInfo.lineInfo.Length)
+                state.lineInfo = m_textInfo.lineInfo[m_lineNumber];
         }
 
 
@@ -5318,8 +5320,10 @@ namespace TMPro {
 
             m_spriteAnimationID = state.spriteAnimationID;
 //TODO Line
-            if (m_lineNumber < m_lineInfos.Count)
+            if (m_lineInfos!=null&& m_lineNumber < m_lineInfos.Count)
                 m_lineInfos[m_lineNumber] = state.lineInfo;
+            else if (m_textInfo.lineInfo != null && m_lineNumber < m_textInfo.lineInfo.Length)
+                m_textInfo.lineInfo[m_lineNumber] = state.lineInfo;
 
             return index;
         }
@@ -7517,11 +7521,11 @@ namespace TMPro {
                                 linkIdFirstCharacterIndex = startIndex + m_xmlAttribute[0].valueStartIndex,
                                 linkIdLength = m_xmlAttribute[0].valueLength
                             };
-                            
+
                             temp_linkInfo.SetLinkID(m_htmlTag, m_xmlAttribute[0].valueStartIndex, m_xmlAttribute[0].valueLength);
-                            
+
                             m_linkInfos.Add(temp_linkInfo);
-                            
+
                             /*m_textInfo.linkInfo[index].textComponent = this;
                             m_textInfo.linkInfo[index].hashCode = m_xmlAttribute[0].valueHashCode;
                             m_textInfo.linkInfo[index].linkTextfirstCharacterIndex = m_characterCount;
@@ -7535,15 +7539,15 @@ namespace TMPro {
                     case 143113: // </LINK>
                         if (m_isParsingText && !m_isCalculatingPreferredValues) {
                             //TODO Link
-                            
+
                             if (m_textInfo.linkCount < m_linkInfos.Count) {
                                 TMP_LinkInfo temp_linkInfo = m_linkInfos[m_textInfo.linkCount];
                                 temp_linkInfo.linkTextLength = m_characterCount - temp_linkInfo.linkTextfirstCharacterIndex;
                                 m_linkInfos[m_textInfo.linkCount] = temp_linkInfo;
-                                    
+
                                 m_textInfo.linkCount += 1;
                             }
-                            
+
                             /*if (m_textInfo.linkInfo != null && m_textInfo.linkCount < m_textInfo.linkInfo.Length) {
                                 m_textInfo.linkInfo[m_textInfo.linkCount].linkTextLength = m_characterCount - m_textInfo.linkInfo[m_textInfo.linkCount].linkTextfirstCharacterIndex;
 
