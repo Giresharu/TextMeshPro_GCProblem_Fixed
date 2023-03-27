@@ -1712,7 +1712,7 @@ namespace TMPro {
         /// <summary>
         /// Array containing the Unicode characters to be parsed.
         /// </summary>
-        internal UnicodeChar[] m_TextProcessingArray = new UnicodeChar[8];
+        internal UnicodeChar[] m_TextProcessingArray /*= new UnicodeChar[8]*/;
 
         /// <summary>
         /// The number of Unicode characters that have been parsed and contained in the m_InternalParsingBuffer
@@ -2260,8 +2260,13 @@ namespace TMPro {
             int srcLength = m_TextBackingArray.Count;
 
             // Make sure parsing buffer is large enough to handle the required text.
-            if (m_TextProcessingArray.Length < srcLength)
-                ResizeInternalArray(ref m_TextProcessingArray, srcLength);
+
+            // List<UnicodeChar> m_processingArray = TMP_ListPool<UnicodeChar>.Get();
+            if (m_TextProcessingArray==null) 
+                m_TextProcessingArray = new UnicodeChar[TMP_TextUtilities.Next256(srcLength)];
+            else if (m_TextProcessingArray.Length < srcLength)
+                TMP_TextInfo.Resize(ref m_TextProcessingArray,srcLength,true);
+                // ResizeInternalArray(ref m_TextProcessingArray, srcLength);
 
             // Reset Style stack back to default
             TMP_TextProcessingStack<int>.SetDefault(m_TextStyleStacks, 0);
@@ -5057,7 +5062,7 @@ namespace TMPro {
                 isMaxVisibleDescenderSet = true;
 
             // Track & Store lineInfo for the new line
-            //TODO Line
+
             TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
 
             temp_lineInfo.firstCharacterIndex = m_firstCharacterOfLine;
@@ -5111,7 +5116,7 @@ namespace TMPro {
             SaveWordWrappingState(ref m_SavedLineState, i, m_characterCount - 1);
 
             m_lineNumber += 1;
-//TODO LINE
+
             temp_lineInfo = new TMP_LineInfo();
 
             temp_lineInfo.lineExtents.min = k_LargePositiveVector2;
@@ -5228,7 +5233,7 @@ namespace TMPro {
             //state.spriteAnimationStack = m_spriteAnimationStack;
 
             state.spriteAnimationID = m_spriteAnimationID;
-//TODO Line
+
             if (m_lineInfos != null && m_lineNumber < m_lineInfos.Count)
                 state.lineInfo = m_lineInfos[m_lineNumber];
             else if (m_textInfo.lineInfo != null && m_lineNumber < m_textInfo.lineInfo.Length)
@@ -5319,7 +5324,7 @@ namespace TMPro {
             //m_spriteAnimationStack = state.spriteAnimationStack;
 
             m_spriteAnimationID = state.spriteAnimationID;
-//TODO Line
+
             if (m_lineInfos!=null&& m_lineNumber < m_lineInfos.Count)
                 m_lineInfos[m_lineNumber] = state.lineInfo;
             else if (m_textInfo.lineInfo != null && m_lineNumber < m_textInfo.lineInfo.Length)
@@ -7505,7 +7510,7 @@ namespace TMPro {
                     case 30266: // <LINK>
                         if (m_isParsingText && !m_isCalculatingPreferredValues) {
                             int index = m_textInfo.linkCount;
-                            //TODO Link
+
                             /*if (m_textInfo.linkInfo == null) {
                                 m_textInfo.linkInfo = new TMP_LinkInfo[index + 1];
                             } else*/
@@ -7538,7 +7543,6 @@ namespace TMPro {
                     case 155913: // </link>
                     case 143113: // </LINK>
                         if (m_isParsingText && !m_isCalculatingPreferredValues) {
-                            //TODO Link
 
                             if (m_textInfo.linkCount < m_linkInfos.Count) {
                                 TMP_LinkInfo temp_linkInfo = m_linkInfos[m_textInfo.linkCount];

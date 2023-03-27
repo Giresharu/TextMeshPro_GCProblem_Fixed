@@ -901,7 +901,7 @@ namespace TMPro {
             MaterialReference.AddMaterialReference(m_currentMaterial, m_currentFontAsset, ref m_materialReferences, m_materialReferenceIndexLookup);
 
             // Set allocations for the text object's TextInfo
-            //TODO Add characterInfo
+
             if (m_textInfo == null)
                 m_textInfo = new TMP_TextInfo(TMP_TextUtilities.Next256(m_InternalTextProcessingArraySize));
             else if (m_textInfo.characterInfo == null)
@@ -1580,8 +1580,7 @@ namespace TMPro {
             m_firstOverflowCharacterIndex = -1;
 
             m_pageNumber = 0;
-
-            //TODO Delete
+            
             // int _pageToDisplay = Mathf.Clamp(m_pageToDisplay - 1, 0, m_textInfo.pageInfo.Length - 1);
             m_textInfo.ClearPageInfo();
 
@@ -1618,8 +1617,7 @@ namespace TMPro {
 
             CharacterSubstitution characterToSubstitute = new CharacterSubstitution(-1, 0);
             bool isSoftHyphenIgnored = false;
-
-            // TODO List
+            
             List<TMP_WordInfo> m_wordInfos = TMP_ListPool<TMP_WordInfo>.Get();
             List<TMP_PageInfo> m_pageInfos = TMP_ListPool<TMP_PageInfo>.Get();
 
@@ -2150,7 +2148,7 @@ namespace TMPro {
 
                     // Injected characters do not override margins
                     if (isInjectingCharacter) {
-                        //TODO Line
+
                         marginLeft = m_lineInfos[m_lineNumber].marginLeft;
                         marginRight = m_lineInfos[m_lineNumber].marginRight;
 
@@ -2751,7 +2749,6 @@ namespace TMPro {
                     if (charCode == 9) {
                         m_textInfo.characterInfo[m_characterCount].isVisible = false;
                         m_lastVisibleCharacterOfLine = m_characterCount;
-                        //TODO Line
 
                         TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
                         temp_lineInfo.spaceCount += 1;
@@ -2786,7 +2783,7 @@ namespace TMPro {
                         m_lineVisibleCharacterCount += 1;
                         m_lastVisibleCharacterOfLine = m_characterCount;
 
-                        //TODO Line
+                        
                         TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
                         temp_lineInfo.marginLeft = marginLeft;
                         temp_lineInfo.marginRight = marginRight;
@@ -2833,7 +2830,7 @@ namespace TMPro {
 
                     // Track # of spaces per line which is used for line justification.
                     if ((charCode == 10 || charCode == 11 || charCode == 0xA0 || charCode == 0x2007 || charCode == 0x2028 || charCode == 0x2029 || char.IsSeparator((char)charCode)) && charCode != 0xAD && charCode != 0x200B && charCode != 0x2060) {
-                        //TODO Line
+                        
                         TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
                         temp_lineInfo.spaceCount += 1;
                         m_lineInfos[m_lineNumber] = temp_lineInfo;
@@ -2841,7 +2838,7 @@ namespace TMPro {
                     }
 
                     if (charCode == 0xA0) {
-                        //TODO Line
+                        
                         TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
                         temp_lineInfo.controlCharacterCount += 1;
                         m_lineInfos[m_lineNumber] = temp_lineInfo;
@@ -2865,7 +2862,7 @@ namespace TMPro {
                         fontScale = m_textInfo.characterInfo[m_characterCount - 1].pointSize / m_Ellipsis.fontAsset.m_FaceInfo.pointSize * m_Ellipsis.fontAsset.m_FaceInfo.scale * (m_isOrthographic ? 1 : 0.1f);
                         scale = fontScale * m_fontScaleMultiplier * m_Ellipsis.character.m_Scale * m_Ellipsis.character.m_Glyph.scale;
 
-                        //TODO Line
+                        
                         marginLeft = m_lineInfos[m_lineNumber].marginLeft;
                         marginRight = m_lineInfos[m_lineNumber].marginRight;
 
@@ -2892,7 +2889,7 @@ namespace TMPro {
                 m_textInfo.characterInfo[m_characterCount].lineNumber = m_lineNumber;
                 m_textInfo.characterInfo[m_characterCount].pageNumber = m_pageNumber;
 
-                //TODO Line
+                
                 if (charCode != 10 && charCode != 11 && charCode != 13 && isInjectingCharacter == false /* && charCode != 8230 */ || m_lineInfos[m_lineNumber].characterCount == 1) {
 
                     TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
@@ -2983,7 +2980,7 @@ namespace TMPro {
                         isMaxVisibleDescenderSet = true;
 
                     // Save Line Information
-                    //TODO Line
+                    
 
                     TMP_LineInfo temp_lineInfo = m_lineInfos[m_lineNumber];
                     temp_lineInfo.firstCharacterIndex = m_firstCharacterOfLine;
@@ -3051,7 +3048,7 @@ namespace TMPro {
 
                         m_firstCharacterOfLine = m_characterCount + 1;
                         m_lineVisibleCharacterCount = 0;
-// TODO LINE
+
 
                         temp_lineInfo = new TMP_LineInfo();
 
@@ -3126,8 +3123,7 @@ namespace TMPro {
                     // Check if we need to increase allocations for the pageInfo array.
                     /*if (m_pageNumber + 1 > m_textInfo.pageInfo.Length)
                         TMP_TextInfo.Resize(ref m_textInfo.pageInfo, m_pageNumber + 1, true);*/
-
-                    //TODO Add PageInfo
+                    
 
                     TMP_PageInfo temp_pageInfo = new TMP_PageInfo();
                     temp_pageInfo.ascender = m_PageAscender;
@@ -3232,7 +3228,7 @@ namespace TMPro {
                 m_characterCount += 1;
             }
 
-            // TODO Release List
+            //Release List
 
             TMP_TextUtilities.ListToArray(m_pageInfos, ref m_textInfo.pageInfo);
             TMP_TextUtilities.ListToArray(m_lineInfos, ref m_textInfo.lineInfo);
@@ -3300,8 +3296,7 @@ namespace TMPro {
             #region Text Vertical Alignment
             Vector3 anchorOffset = Vector3.zero;
             Vector3[] corners = m_RectTransformCorners; // GetTextContainerLocalCorners();
-
-            //TODO 迁移_pageToDisplay到这里
+            
             int _pageToDisplay = 0;
             if (overflowMode == TextOverflowModes.Page)
                 _pageToDisplay = Mathf.Clamp(m_pageToDisplay - 1, 0, m_textInfo.pageInfo.Length - 1);
@@ -3735,8 +3730,7 @@ namespace TMPro {
 
                     // If last character is a word
                     if (isStartOfWord && i == m_characterCount - 1) {
-
-                        // TODO WordInfo
+                        
                         /*int size = m_textInfo.wordInfo.Length;
                         int index = m_textInfo.wordCount;
 
@@ -3767,8 +3761,7 @@ namespace TMPro {
                     } else {
                         wordLastChar = i == m_characterCount - 1 && char.IsLetterOrDigit(unicode) ? i : i - 1;
                         isStartOfWord = false;
-
-// TODO WordInfo
+                        
                         /*if (m_textInfo.wordInfo==null) {
                             m_textInfo.wordInfo = new TMP_WordInfo[TMP_TextUtilities.Next256(m_textInfo.wordCount + 1)];
                             // Debug.Log(m_textInfo.wordInfo + " new " +TMP_TextUtilities.Next256(m_textInfo.wordCount + 1));
@@ -4057,7 +4050,7 @@ namespace TMPro {
             }
             #endregion
 
-            //TODO Release WordInfo
+        
             TMP_TextUtilities.ListToArray(m_wordInfos, ref m_textInfo.wordInfo, false);
             TMP_ListPool<TMP_WordInfo>.Release(m_wordInfos);
 

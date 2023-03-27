@@ -46,7 +46,7 @@ namespace TMPro {
         }
 
         internal TMP_TextInfo(int characterCount) {
-            characterInfo = new TMP_CharacterInfo[characterCount];
+            // characterInfo = new TMP_CharacterInfo[characterCount];
             // wordInfo = new TMP_WordInfo[16];
             // linkInfo = new TMP_LinkInfo[0];
             // lineInfo = new TMP_LineInfo[1];
