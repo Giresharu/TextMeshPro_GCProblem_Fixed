@@ -1,7 +1,7 @@
 {
   "name": "com.unity.textmeshprofixed",
   "displayName": "TextMeshProFixed",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "unity": "2020.1",
   "unityRelease": "0a10",
   "description": "The TMP that fixed GC-Problem. Based on version 3.0.6.",

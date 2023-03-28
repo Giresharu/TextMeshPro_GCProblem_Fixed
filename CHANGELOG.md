@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.3] - 2023-03-28
+### Add
+* 补充对 m_TextProcessingArray 数组的优化。
+
 ## [0.0.2] - 2023-03-26
 ### Fixed
 - 修复了使用 Vertical Layout Group 来排版时，会出现 lineInfo 空引用的问题；
